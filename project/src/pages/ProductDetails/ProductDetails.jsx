@@ -19,7 +19,7 @@ function ProductDetails() {
 
   const { user } = useContext(userContext);
   const { cart, setCart } = useContext(CartContext);
-  
+
   const [isLoading, setisLoading] = useState(false);
   const [product, setProduct] = useState(null);
 
@@ -32,33 +32,42 @@ function ProductDetails() {
     });
   }
 
+  function redirectToCartPage() {
+    if (!user) {
+      navigate(`/cart/undefined`);
+    }
+    navigate(`/cart/${user.id}`);
+  }
+
   function handleCartButton() {
-    if(!user){
-      return alert('please login')
+    if (!user) {
+      return alert("please login");
     }
     setisLoading(true);
     if (cartButton) {
       const addToCartPromise = addProductToUserCart(id, user.id, 1);
       addToCartPromise.then((response) => {
-       
         setisLoading(false);
         setCartButton(false);
         setCart([...response.data.products]);
       });
     } else {
-      let userCartPromise = removeProductFromUserCart(id, user.id);
-      userCartPromise.then((response) => {
-        console.log([...response.data.products]);
-        setisLoading(false);
-        setCartButton(true);
-        setCart([...response.data.products]);
-      });
+      let userCartPromise = removeProductFromUserCart(user.id,id);
+      userCartPromise
+        .then((response) => {
+          setisLoading(false);
+          setCartButton(true);
+          setCart([...response.data.products]);
+        })
+        .catch(() => {
+          return alert("cannot remove item from cart due to some error");
+        });
     }
   }
 
   useEffect(() => {
     downloadProduct(id);
-  
+
     cart &&
       cart.map((product) => {
         if (product.productId == Number(id)) {
@@ -109,14 +118,13 @@ function ProductDetails() {
                   : "Remove product from cart"}
               </div>
 
-              <Link to={`/cart`}>
-                <p
-                  id="goToCartBtn"
-                  className="product-details-action btn btn-warning text-decoration-none"
-                >
-                  Go to cart
-                </p>
-              </Link>
+              <button
+                onClick={redirectToCartPage}
+                id="goToCartBtn"
+                className="product-details-action btn btn-warning text-decoration-none"
+              >
+                Go to cart
+              </button>
             </div>
           </div>
         </div>

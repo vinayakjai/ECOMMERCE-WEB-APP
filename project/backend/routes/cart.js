@@ -9,10 +9,13 @@ const {
   deleteProductsOfCart,
   updateQuantity,
   deleteProductFromUserCart,
+  calculateTotalPrice,
 } = require("../controller/cart");
 const { authCheck } = require("../middleware/authMiddleware");
 
+cartRouter.get('/totalAmount',calculateTotalPrice);
 cartRouter.get("/:id", getUserCart);//
+
 cartRouter.post("/:id", createCartForUser);//
 cartRouter.put("/product",addProductToCart);//
 cartRouter.put('/quantity',updateQuantity);

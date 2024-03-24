@@ -69,3 +69,7 @@ export function updateProductQuantity(userId,productId,updatedQuantity)
     return `${import.meta.env.VITE_FAKE_STORE_URL}/carts/quantity?userId=${userId}&productId=${productId}&quantity=${updatedQuantity}`
 }
 
+export function calculatepriceApi(productsInCart){
+     return `${import.meta.env.VITE_FAKE_STORE_URL}/carts/totalAmount?products=${productsInCart}`;
+}
+

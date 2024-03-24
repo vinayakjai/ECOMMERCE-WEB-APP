@@ -73,9 +73,11 @@ const removeProductFromCart = async (req, res) => {
         err: "plz provide all information",
       });
     }
+    
 
     //fetching cart info for the given userId
     const userCart = await Cart.findOne({userId });
+  
     if (!userCart) {
       return res.status(401).json({
         err: "error occured while fetching cart of user",
@@ -279,7 +281,64 @@ const updateQuantity=async(req,res)=>{
   }
 }
 
+const calculateTotalPrice=(req,res)=>{
+  try{
+     let {products}=req.query;
+    console.log(products)
 
+     let totalPrice=0;
+     let discount=30;
+
+     let finalPrice=null;
+     let deliveryCharge=25;
+     let shouldDiscount=true;
+     products.map((product)=>{
+      totalPrice+=product.quantity*product.productDetails.price;
+     })
+     console.log(totalPrice)
+     if(totalPrice<100){
+      return res.status(201).json({
+            shouldDiscount:false,
+            deliveryCharge:null,
+            msg:'we accept orders above 100',
+            totalPrice,
+            finalPrice
+
+      })
+     }
+     if(totalPrice<199){
+      shouldDiscount=false;
+      res.status(201).json({
+        msg:'discount is applicable on orders above 200',
+        shouldDiscount,
+        deliveryCharge,
+        totalPrice,
+        finalPrice
+      })
+     }
+
+     finalPrice=totalPrice+deliveryCharge-discount;
+
+     return res.status(201).json({
+      shouldDiscount:true,
+      deliveryCharge,
+      discount,
+      finalPrice,
+      totalPrice,
+     })
+
+     
+    
+
+
+    
+  }catch(err){
+    return res.status(402).json({
+      
+      msg:'unable to calculate price',
+    })
+  }
+}
 module.exports = {
   addProductToCart,
   removeProductFromCart,
@@ -288,5 +347,6 @@ module.exports = {
   deleteUserCart,
   deleteProductsOfCart,
   updateQuantity,
+  calculateTotalPrice
  
 };

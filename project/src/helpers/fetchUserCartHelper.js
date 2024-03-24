@@ -1,11 +1,10 @@
 import axios from "axios";
 import {
   addProductToCart,
+  calculatepriceApi,
   createCartForUser,
- 
   deleteUserCart,
   getCartByUser,
-  
   updateProductQuantity,
 } from "../apis/fakeStoreProdApis";
 
@@ -13,7 +12,7 @@ export async function createCart(userId) {
   try {
     await axios.post(createCartForUser(userId), { withCredentials: true });
   } catch (error) {
-    return error.response.data
+    return error.response.data;
   }
 }
 export async function fetchUserCart(userId) {
@@ -24,11 +23,9 @@ export async function fetchUserCart(userId) {
 
     return userCartPromise;
 
-   
-
     //return response.products
   } catch (error) {
-      return error.response.data
+    return error.response.data;
   }
 }
 
@@ -60,7 +57,7 @@ export async function addProductToUserCart(productId, userId, quantity = 0) {
   }
 }
 
-export async function removeProductFromUserCart(userId,productId) {
+export async function removeProductFromUserCart(userId, productId) {
   try {
     let response = await axios.delete(
       `http://localhost:8765/carts/product?userId=${userId}&productId=${productId}`,
@@ -82,6 +79,23 @@ export async function updateQuantityInUserCart(
   try {
     const response = await axios.put(
       updateProductQuantity(userId, productId, updatedQuantity),
+      {
+        withCredentials: true,
+      }
+    );
+
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function calculatePrice(productsInCart) {
+  try {
+    
+    const response = await axios.get(
+      calculatepriceApi(productsInCart),
+      
       {
         withCredentials: true,
       }

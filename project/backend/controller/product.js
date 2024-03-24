@@ -117,3 +117,18 @@ module.exports.getProductsInCategory = (req, res) => {
       err:'unable to fetch products with specific categories'
     }));
 };
+
+module.exports.getDiscountAndDeliveryCharge=(req,res)=>{
+  try{
+
+    return res.status(201).json({
+      deliveryCharge:30,
+      discount:100,
+    })
+    
+  }catch(err){
+    return res.status(402).json({
+      msg:'unable to calculate Price'
+    })
+  }
+}
