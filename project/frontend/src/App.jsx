@@ -10,8 +10,8 @@ import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import MainRoutes from "./routes/MainRoutes";
 // context import
-import UserContext from "./context/userContext";
-import CartContext from "./context/CartContext";
+import UserContext from "./context/userContext.js";
+import CartContext from "./context/CartContext.js";
 import { createCart, fetchUserCart } from "./helpers/fetchUserCartHelper";
 import { fetchToken } from "./helpers/fetchUserInfo";
 import Error from "./pages/Error/Error";
